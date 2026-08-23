@@ -7,6 +7,7 @@ from .access import NetCDFThreadViolation as NetCDFThreadViolation
 from .access import on_gateway_thread as on_gateway_thread
 from .access import run as run
 from .container import ARRAY_KEYS as ARRAY_KEYS
+from .container import _scalar as _scalar
 from .container import CONTAINER_FLATTEN_KEYS as CONTAINER_FLATTEN_KEYS
 from .container import FORMAT_VERSION as FORMAT_VERSION
 from .container import FORMAT_VERSION_KEY as FORMAT_VERSION_KEY
