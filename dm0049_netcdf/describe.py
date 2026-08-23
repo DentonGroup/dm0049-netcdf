@@ -29,10 +29,21 @@ JSON_DEPTH = 4
 INDENT = "  "
 
 
+def _is_path(text: str) -> bool:
+    """Whether a string names a place on disk.
+
+    A cut path is not a shorter path, it is nothing: it cannot be copied,
+    opened, or grepped for, which is the whole reason to be looking at it.
+    Folder names here carry spaces, so the leading separator is the only
+    marker that holds.
+    """
+    return text.startswith("/") or text.startswith("~/")
+
+
 def _fits(text: str) -> str:
-    """A single line, cut to width, with the cut made visible."""
+    """A single line, cut to width unless cutting it destroys it."""
     text = text.replace("\n", "\\n")
-    if len(text) <= STRING_WIDTH:
+    if _is_path(text) or len(text) <= STRING_WIDTH:
         return text
     return f"{text[:STRING_WIDTH]}… ({len(text)} chars)"
 
