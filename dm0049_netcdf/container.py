@@ -57,9 +57,9 @@ ureg.define("ADC = count")
 def spectrum_dataset(
     *,
     spectrum_raw: np.ndarray,
-    spectrum: np.ndarray,
     frame_times: np.ndarray,
     pixels: np.ndarray,
+    spectrum: np.ndarray | None = None,
 ) -> xr.Dataset:
     """The array half of an acquisition, shaped for the container.
 
@@ -72,7 +72,6 @@ def spectrum_dataset(
     dm0049-client wrote and a file a client above it wrote the same file.
     """
     spectrum_raw = np.asarray(spectrum_raw, dtype=np.float64)
-    spectrum = np.asarray(spectrum, dtype=np.float64)
     frame_times = np.asarray(frame_times, dtype=np.float64)
     pixels = np.asarray(pixels, dtype=np.int32)
 
@@ -96,11 +95,6 @@ def spectrum_dataset(
                 dims=["index", "frame", "pixel"],
                 attrs={"long_name": "Raw spectrum frames", "units": "ADC"},
             ),
-            "spectrum": xr.DataArray(
-                spectrum[np.newaxis, ...],
-                dims=["index", "pixel"],
-                attrs={"long_name": "Averaged spectrum", "units": "ADC"},
-            ),
             "frame_times": xr.DataArray(
                 frame_times[np.newaxis, ...],
                 dims=["index", "frame"],
@@ -113,10 +107,18 @@ def spectrum_dataset(
             "frame": np.arange(frame_count, dtype=np.int32),
         },
     )
-    return ds.pint.quantify(
-        {"spectrum_raw": "ADC", "spectrum": "ADC", "frame_times": "s"},
-        unit_registry=ureg,
-    )
+    units = {"spectrum_raw": "ADC", "frame_times": "s"}
+    if spectrum is not None:
+        # the rate fitted across the frames, not their mean: a client that did
+        # not fit one leaves it out rather than writing something else under
+        # the name
+        ds["spectrum"] = xr.DataArray(
+            np.asarray(spectrum, dtype=np.float64)[np.newaxis, ...],
+            dims=["index", "pixel"],
+            attrs={"long_name": "Fitted spectrum", "units": "ADC"},
+        )
+        units["spectrum"] = "ADC"
+    return ds.pint.quantify(units, unit_registry=ureg)
 
 def flatten_dict(d: dict, parent_key: str = "", sep: str = ".") -> dict:
     """Flatten nested dicts into dotted keys, matching pandas.json_normalize.
