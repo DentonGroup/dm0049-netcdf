@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dm0049-netcdf"
+version = "0.1"
+description = "The netCDF acquisition container, and the one path into libnetcdf"
+authors = [
+    { name = "Justin Keogh", email = "github.com@v6y.net" },
+]
+license = "ISC"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+    "pint",
+    "pint-xarray",
+    "xarray",
+    "netCDF4",
+]
+
+[project.urls]
+Homepage = "https://github.com/DentonGroup/dm0049-netcdf"
+
+[tool.setuptools]
+packages = ["dm0049_netcdf"]
+
+[tool.setuptools.package-data]
+dm0049_netcdf = ["py.typed"]
