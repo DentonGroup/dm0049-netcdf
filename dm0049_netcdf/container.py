@@ -34,6 +34,12 @@ LEGACY_FORMAT_VERSION_KEY = "jason_file_version"
 
 # the array that makes an acquisition displayable, as opposed to the ones
 # derived from it
+# When the acquisition was taken, epoch seconds. Every acquisition has one and
+# every client knows it, so the container names it rather than each client
+# naming it differently. A file's own name is not a record of this: it does not
+# survive being renamed, and a copy carries the copy's mtime.
+ACQUIRED_KEY: str = "acquired"
+
 # Nested values flattened into dotted data variables. "ext" is the container's
 # own name for a caller-owned tree; a writer with more of them passes its own
 # set, as dm0049-client does for the settle window.

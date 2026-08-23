@@ -6,6 +6,7 @@ from .access import NetCDFGatewayClosed as NetCDFGatewayClosed
 from .access import NetCDFThreadViolation as NetCDFThreadViolation
 from .access import on_gateway_thread as on_gateway_thread
 from .access import run as run
+from .container import ACQUIRED_KEY as ACQUIRED_KEY
 from .container import ARRAY_KEYS as ARRAY_KEYS
 from .describe import render as render
 from .container import _scalar as _scalar
