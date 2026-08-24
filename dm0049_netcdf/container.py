@@ -18,8 +18,7 @@ import json
 from pathlib import Path
 
 import numpy as np
-import pint
-import pint_xarray  # noqa: F401 – registers pint accessor on xarray
+import pint_xarray
 import xarray as xr
 
 from .access import run as netcdf_run
@@ -49,9 +48,15 @@ SPECTRUM_KEY: str = "spectrum_raw"
 ARRAY_KEYS: tuple[str, ...] = (SPECTRUM_KEY, "spectrum", "frame_times")
 SEED_KEYS: frozenset[str] = frozenset({"pixels", *ARRAY_KEYS})
 
-# raw ADC counts, matching the analysis side
-ureg = pint.UnitRegistry(force_ndarray_like=True)
-ureg.define("ADC = count")
+# The registry pint_xarray quantifies against, not one of our own. A quantity
+# from one registry cannot be combined with a quantity from another, so a
+# second registry defining the same units means the container's arrays and the
+# analysis side's do not interoperate, and say so only when someone tries.
+#
+# Defined here because this is the module every client reaches through.
+ureg = pint_xarray.unit_registry
+if "ADC" not in ureg:
+    ureg.define("ADC = count")  # raw ADC counts
 
 
 def spectrum_dataset(
