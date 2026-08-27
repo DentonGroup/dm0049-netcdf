@@ -27,6 +27,10 @@ from .container import write_acquisition as write_acquisition
 
 from .describe import render as render
 
+from .tabulate import columns_for as columns_for
+from .tabulate import MissingArray as MissingArray
+from .tabulate import to_csv as to_csv
+
 from .upgrade import CannotUpgrade as CannotUpgrade
 from .upgrade import LEGACY_ACQUIRED_KEY as LEGACY_ACQUIRED_KEY
 from .upgrade import backup_path as backup_path
