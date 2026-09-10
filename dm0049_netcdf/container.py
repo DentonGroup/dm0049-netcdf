@@ -192,7 +192,9 @@ def build_dataset(
     ds = seed if seed is not None else xr.Dataset(coords={"index": [0]})
 
     for key in scalar_keys:
-        if key not in config_dict:
+        # a None is left out: its absence is the statement, where a zero
+        # or an empty string would be a value nobody measured
+        if key not in config_dict or config_dict[key] is None:
             continue
         if key in constant_keys:
             ds.attrs[key] = config_dict[key]
